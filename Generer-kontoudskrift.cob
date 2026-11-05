@@ -19,53 +19,43 @@
         COPY "DataStruktur/BANKER.cpy".
        
        WORKING-STORAGE SECTION.
-       01 END-OF-BANKER        PIC X   VALUE "N".
-       01 END-OF-TRANSAKTIONER PIC X   VALUE "N".
-
+       01 END-BANKER-READ      PIC X       VALUE "N".
+       01 END-OF-TRANSAKTIONER PIC X       VALUE "N".
+       01 CURRENT-CPR          PIC X(15)   VALUE SPACES.
 
        PROCEDURE DIVISION.
-      * PERFORM READ-TRANSAKTIONER
-      * PERFORM READ-BANKER
+
+       OPEN INPUT TRANSAKTIONSFIL
+       PERFORM UNTIL END-OF-TRANSAKTIONER = "Y"
+           READ TRANSAKTIONSFIL INTO TRANSAKTION-RECORD
+               AT END
+                   MOVE "Y" TO END-OF-TRANSAKTIONER
+               NOT AT END
+                   IF CPR OF TRANSAKTION-RECORD = CURRENT-CPR
+      *                 PERFORM UDSKRIVTRANSAKTION
+                       DISPLAY "SAME PERSON"
+                   ELSE
+      *                 PERFORM UDSKRIV-FOOTER
+                       MOVE CPR OF TRANSAKTION-RECORD TO CURRENT-CPR
+                       PERFORM FINDBANK
+      *                 PERFORM UDSKRIV-HEADER
+      *                 PERFORM UDSKRIV-TRANSAKTION
+                   END-IF
+       END-PERFORM
+       CLOSE TRANSAKTIONSFIL
 
        STOP RUN.
 
-       READ-BANKER.
+       FINDBANK.
        OPEN INPUT BANKERFIL
-       PERFORM UNTIL END-OF-BANKER = "Y"
+       MOVE "N" TO END-BANKER-READ
+       PERFORM UNTIL END-BANKER-READ = "Y"
        READ BANKERFIL INTO BANK-RECORD
            AT END
-               MOVE "Y" TO END-OF-BANKER
+               MOVE "Y" TO END-BANKER-READ
            NOT AT END
-               DISPLAY "---------------------------------------"
-               DISPLAY "NAVN:    " NAVN OF BANK-RECORD
-               DISPLAY "REG-NR:  " REG-NR OF BANK-RECORD
-               DISPLAY "ADRESSE: " ADRESSE OF BANK-RECORD
-               DISPLAY "TELEFON: " TELEFON
-               DISPLAY "EMAIL:   " EMAIL
+               IF REG-NR OF TRANSAKTION-RECORD = REG-NR OF BANK-RECORD
+                   THEN MOVE "Y" TO END-BANKER-READ
        END-PERFORM
+       DISPLAY NAVN OF BANK-RECORD
        CLOSE BANKERFIL.
-
-       READ-TRANSAKTIONER.
-       OPEN INPUT TRANSAKTIONSFIL
-       PERFORM READ-TRANSAKTION UNTIL END-OF-TRANSAKTIONER = "Y"
-       CLOSE TRANSAKTIONSFIL.
-
-       READ-TRANSAKTION.
-       READ TRANSAKTIONSFIL INTO TRANSAKTION-RECORD
-       AT END
-           MOVE "Y" TO END-OF-TRANSAKTIONER
-       NOT AT END
-           DISPLAY "---------------------------------------"
-           DISPLAY "CPR:              " CPR
-           DISPLAY "NAVN:             " NAVN OF TRANSAKTION-RECORD
-           DISPLAY "ADRESSE:          " ADRESSE OF TRANSAKTION-RECORD
-           DISPLAY "FODSELSDATO:      " FØDSELSDATO
-           DISPLAY "KONTO-ID:         " KONTO-ID
-           DISPLAY "REG-NR:           " REG-NR OF TRANSAKTION-RECORD
-           DISPLAY "BELOB:            " BELØB
-           DISPLAY "VALUTA:           " VALUTA
-           DISPLAY "TRANSAKTIONSTYPE: " TRANSAKTIONSTYPE
-           DISPLAY "BUTIK:            " BUTIK
-           DISPLAY "TIDSPUNKT:        " TIDSPUNKT
-           DISPLAY "---------------------------------------"
-           DISPLAY " ".
