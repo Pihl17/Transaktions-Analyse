@@ -1,2 +1,6 @@
 # Builds and executable files
 *.exe
+
+# Input data filer genereret af python scriptet
+[Bb]anker.txt
+[Tt]ransaktioner.txt
