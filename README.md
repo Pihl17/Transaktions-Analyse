@@ -15,7 +15,7 @@ Python scriptet `GenInputData.py` generer en liste af fiktive banke og fiktive t
 ## Generaring af input data
 
 Åben comand prompt terminalen og naviger til mappen. \
-Inde i mappen, kør python scripted: \
+Inde i mappen, kør python scripted:
 ```
 python GenInputData.py
 ```
