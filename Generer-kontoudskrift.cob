@@ -29,7 +29,7 @@
        01 BANKINFOTAB          PIC X(30)   VALUE SPACES.
        01 END-BANKER-READ      PIC X       VALUE "N".
        01 END-OF-TRANSAKTIONER PIC X       VALUE "N".
-       01 CURRENT-CPR          PIC X(15)   VALUE SPACES.
+       01 CURRENT-KONTO        PIC X(12)   VALUE SPACES.
        01 DATO                 PIC X(10)   VALUE SPACES.
        01 KLOKKESLÆT           PIC X(8)    VALUE SPACES.                
 
@@ -41,13 +41,16 @@
        PERFORM UNTIL END-OF-TRANSAKTIONER = "Y"
            READ TRANSAKTIONSFIL INTO TRANSAKTION-RECORD
                AT END
+                   PERFORM UDSKRIV-FOOTER
                    MOVE "Y" TO END-OF-TRANSAKTIONER
                NOT AT END
-                   IF CPR OF TRANSAKTION-RECORD = CURRENT-CPR
+                   IF KONTO-ID = CURRENT-KONTO
                        PERFORM UDSKRIV-TRANSAKTION
                    ELSE
-                       PERFORM UDSKRIV-FOOTER
-                       MOVE CPR OF TRANSAKTION-RECORD TO CURRENT-CPR
+                       IF CURRENT-KONTO NOT = SPACES
+                           PERFORM UDSKRIV-FOOTER
+                       END-IF
+                       MOVE KONTO-ID TO CURRENT-KONTO
                        PERFORM FINDBANK
                        PERFORM UDSKRIV-HEADER
                        PERFORM UDSKRIV-TRANSAKTION
@@ -77,7 +80,6 @@
 
 
        UDSKRIV-HEADER.
-       PERFORM UDSKRIV-OUTPUT
        MOVE "----------------------------------------------------------" 
            TO OUTPUT-LINJE
        PERFORM UDSKRIV-OUTPUT
@@ -141,4 +143,8 @@
 
 
        UDSKRIV-FOOTER.
+       PERFORM UDSKRIV-OUTPUT
+       MOVE " -- FOOTER GOES HERE -- " TO OUTPUT-LINJE
+       PERFORM UDSKRIV-OUTPUT
+       PERFORM UDSKRIV-OUTPUT
        PERFORM UDSKRIV-OUTPUT.
