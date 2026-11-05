@@ -41,14 +41,13 @@
                    MOVE "Y" TO END-OF-TRANSAKTIONER
                NOT AT END
                    IF CPR OF TRANSAKTION-RECORD = CURRENT-CPR
-      *                 PERFORM UDSKRIVTRANSAKTION
-                       DISPLAY " "
+                       PERFORM UDSKRIV-TRANSAKTION
                    ELSE
-      *                 PERFORM UDSKRIV-FOOTER
+                       PERFORM UDSKRIV-FOOTER
                        MOVE CPR OF TRANSAKTION-RECORD TO CURRENT-CPR
                        PERFORM FINDBANK
                        PERFORM UDSKRIV-HEADER
-      *                 PERFORM UDSKRIV-TRANSAKTION
+                       PERFORM UDSKRIV-TRANSAKTION
                    END-IF
        END-PERFORM
        CLOSE TRANSAKTIONSFIL
@@ -120,4 +119,14 @@
        PERFORM UDSKRIV-OUTPUT
        MOVE "Dato Tidspunkt Transaktionstype Beløb (DKK) Beløb (Valuta 
       -     ") Valutakode Butik" TO OUTPUT-LINJE
+       PERFORM UDSKRIV-OUTPUT.
+
+
+       UDSKRIV-TRANSAKTION.
+       STRING TIDSPUNKT DELIMITED BY SIZE
+           INTO OUTPUT-LINJE
+       PERFORM UDSKRIV-OUTPUT.
+
+
+       UDSKRIV-FOOTER.
        PERFORM UDSKRIV-OUTPUT.
