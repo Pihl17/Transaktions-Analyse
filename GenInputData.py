@@ -92,7 +92,7 @@ with open(BANK_FILE, "w") as bank_file:
             f"{bank_name:<30}"         # Banknavn (30 tegn)
             f"{bank_address:<50}"      # Bankadresse (50 tegn)
             f"{phone_number:<15}"      # Telefonnummer (15 tegn)
-            f"{email:<30}"             # Emailadresse (30 tegn)
+            f"{email:<31}"             # Emailadresse (30 tegn)
         )
         bank_file.write(bank_record + "\n")
 
