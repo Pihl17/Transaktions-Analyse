@@ -54,14 +54,17 @@
                        IF CURRENT-KONTO NOT = SPACES
                            PERFORM UDSKRIV-FOOTER
                        END-IF
-                       MOVE KONTO-ID TO CURRENT-KONTO
-                       PERFORM FINDBANK
+                       PERFORM OPSÆT-NÆSTE-KUNDE
                        PERFORM UDSKRIV-HEADER
                        PERFORM UDSKRIV-TRANSAKTION
                    END-IF
        END-PERFORM
        CLOSE TRANSAKTIONSFIL
        CLOSE KONTOUDSKRIFTFIL
+       
+       DISPLAY " "
+       DISPLAY "kontoudskrifter genereret og kan findes i " 
+                   "Output/Kontoudskrifter.txt"
 
        STOP RUN.
 
@@ -96,6 +99,12 @@
                ADD 1 TO BANK-INDEX
            END-IF
        END-PERFORM.
+
+
+       OPSÆT-NÆSTE-KUNDE.
+       DISPLAY "Generer kontoudskrift for " NAVN OF TRANSAKTION-RECORD
+       MOVE KONTO-ID TO CURRENT-KONTO
+       PERFORM FINDBANK.
 
 
        UDSKRIV-HEADER.
