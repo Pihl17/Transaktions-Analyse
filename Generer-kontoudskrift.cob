@@ -26,15 +26,20 @@
            02 OUTPUT-LINJE PIC X(120).
        
        WORKING-STORAGE SECTION.
-       01 BANKINFOTAB          PIC X(30)   VALUE SPACES.
-       01 END-BANKER-READ      PIC X       VALUE "N".
-       01 END-OF-TRANSAKTIONER PIC X       VALUE "N".
-       01 CURRENT-KONTO        PIC X(12)   VALUE SPACES.
+       01 BANKINFOTAB      PIC X(30)           VALUE SPACES.
+       01 USDTILDKK        CONSTANT AS 6.8.
+       01 EURTILDKK        CONSTANT AS 7.5.
+
+       01 END-BANKER-READ      PIC X           VALUE "N".
+       01 END-OF-TRANSAKTIONER PIC X           VALUE "N".
+       01 CURRENT-KONTO        PIC X(12)       VALUE SPACES.
+
        01 BANKER OCCURS 200 TIMES.
         COPY "DataStruktur/BANKER.cpy".
-       01 BANK-INDEX           PIC 9(3)    VALUE 1.
-       01 DATO                 PIC X(10)   VALUE SPACES.
-       01 KLOKKESLÆT           PIC X(8)    VALUE SPACES.
+       01 BANK-INDEX           PIC 9(3)        VALUE 1.
+
+       01 DATO                 PIC X(10)       VALUE SPACES.
+       01 KLOKKESLÆT           PIC X(8)        VALUE SPACES.
 
 
        PROCEDURE DIVISION.
@@ -166,9 +171,14 @@
        STRING DATO DELIMITED BY SPACE
            SPACE DELIMITED BY SIZE
            KLOKKESLÆT DELIMITED BY SPACE
+           SPACE DELIMITED BY SIZE
+           BELØB DELIMITED BY SIZE
+           SPACE DELIMITED BY SIZE
+           VALUTA DELIMITED BY SIZE
+           SPACE DELIMITED BY SIZE
+           BUTIK DELIMITED BY SPACE
            INTO OUTPUT-LINJE
        PERFORM UDSKRIV-OUTPUT.
-
 
        UDSKRIV-FOOTER.
        PERFORM UDSKRIV-OUTPUT
