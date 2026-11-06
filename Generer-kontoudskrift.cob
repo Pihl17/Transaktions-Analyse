@@ -40,6 +40,8 @@
 
        01 DATO                 PIC X(10)       VALUE SPACES.
        01 KLOKKESLÆT           PIC X(8)        VALUE SPACES.
+       01 VALUTABELØB          PIC 9(12)V9(2).
+       01 DKKBELØB             PIC 9(12).9(2).
 
 
        PROCEDURE DIVISION.
@@ -132,8 +134,10 @@
            INTO OUTPUT-LINJE
        PERFORM UDSKRIV-OUTPUT
        PERFORM UDSKRIV-OUTPUT
-       MOVE "Dato Tidspunkt Transaktionstype Beløb (DKK) Beløb (Valuta 
-      -     ") Valutakode Butik" TO OUTPUT-LINJE
+       STRING "   Dato    | Tidspunkt | Transaktionstype |"
+             "   Beløb (DKK)   | Beløb (Valuta)  |" 
+             " Valutakode |    Butik"
+             INTO OUTPUT-LINJE
        PERFORM UDSKRIV-OUTPUT.
 
 
@@ -168,17 +172,33 @@
        UDSKRIV-TRANSAKTION.
        MOVE TIDSPUNKT(1:10) TO DATO
        MOVE TIDSPUNKT(12:8) TO KLOKKESLÆT
+       PERFORM KONVERTER-TIL-DKK
        STRING DATO DELIMITED BY SPACE
-           SPACE DELIMITED BY SIZE
+           " |  " DELIMITED BY SIZE
            KLOKKESLÆT DELIMITED BY SPACE
-           SPACE DELIMITED BY SIZE
+           " | " DELIMITED BY SIZE
+           TRANSAKTIONSTYPE DELIMITED BY SIZE
+           "  | " DELIMITED BY SIZE
+           DKKBELØB DELIMITED BY SIZE
+           " | " DELIMITED BY SIZE
            BELØB DELIMITED BY SIZE
-           SPACE DELIMITED BY SIZE
+           " |     " DELIMITED BY SIZE
            VALUTA DELIMITED BY SIZE
-           SPACE DELIMITED BY SIZE
+           "    | " DELIMITED BY SIZE
            BUTIK DELIMITED BY SPACE
            INTO OUTPUT-LINJE
        PERFORM UDSKRIV-OUTPUT.
+
+       KONVERTER-TIL-DKK.
+       MOVE BELØB TO VALUTABELØB
+       EVALUATE VALUTA
+           WHEN 'DKK'
+               MOVE BELØB TO DKKBELØB
+           WHEN 'USD'
+               MULTIPLY VALUTABELØB BY USDTILDKK GIVING DKKBELØB
+           WHEN 'EUR'
+               MULTIPLY VALUTABELØB BY EURTILDKK GIVING DKKBELØB
+       END-EVALUATE.
 
        UDSKRIV-FOOTER.
        PERFORM UDSKRIV-OUTPUT
