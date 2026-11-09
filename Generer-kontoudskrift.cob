@@ -39,11 +39,11 @@
        01 BANK-INDEX           PIC 9(3)        VALUE 1.
 
        01 DATO                 PIC X(10)       VALUE SPACES.
-       01 KLOKKESLÃ†T           PIC X(8)        VALUE SPACES.
-       01 VALUTABELÃ˜B          PIC S9(12)V9(2).
-       01 DKKBELÃ˜B             PIC S9(12)V9(2).
-       01 DKKBELÃ˜BVISNING      PIC ---,---,---,--9.99.
-       01 VALUTABELÃ˜BVISNING   PIC ---,---,---,--9.99.
+       01 KLOKKESLÆT           PIC X(8)        VALUE SPACES.
+       01 VALUTABELØB          PIC S9(12)V9(2).
+       01 DKKBELØB             PIC S9(12)V9(2).
+       01 DKKBELØBVISNING      PIC ---,---,---,--9.99.
+       01 VALUTABELØBVISNING   PIC ---,---,---,--9.99.
 
 
        PROCEDURE DIVISION.
@@ -63,7 +63,7 @@
                        IF CURRENT-KONTO NOT = SPACES
                            PERFORM UDSKRIV-FOOTER
                        END-IF
-                       PERFORM OPSÃ†T-NÃ†STE-KUNDE
+                       PERFORM OPSÆT-NÆSTE-KUNDE
                        PERFORM UDSKRIV-HEADER
                        PERFORM UDSKRIV-TRANSAKTION
                    END-IF
@@ -110,7 +110,7 @@
        END-PERFORM.
 
 
-       OPSÃ†T-NÃ†STE-KUNDE.
+       OPSÆT-NÆSTE-KUNDE.
        DISPLAY "Generer kontoudskrift for " NAVN OF TRANSAKTION-RECORD
        MOVE KONTO-ID TO CURRENT-KONTO
        PERFORM FINDBANK.
@@ -137,7 +137,7 @@
        PERFORM UDSKRIV-OUTPUT
        PERFORM UDSKRIV-OUTPUT
        STRING "   Dato    | Tidspunkt | Transaktionstype |"
-             "     BelÃ¸b (DKK)    |   BelÃ¸b (Valuta)   |" 
+             "     Beløb (DKK)    |   Beløb (Valuta)   |" 
              " Valutakode |    Butik"
              INTO OUTPUT-LINJE
        PERFORM UDSKRIV-OUTPUT.
@@ -173,19 +173,19 @@
 
        UDSKRIV-TRANSAKTION.
        MOVE TIDSPUNKT(1:10) TO DATO
-       MOVE TIDSPUNKT(12:8) TO KLOKKESLÃ†T
+       MOVE TIDSPUNKT(12:8) TO KLOKKESLÆT
        PERFORM KONVERTER-TIL-DKK
-       MOVE BELÃ˜B TO VALUTABELÃ˜BVISNING
-       MOVE DKKBELÃ˜B TO DKKBELÃ˜BVISNING
+       MOVE BELØB TO VALUTABELØBVISNING
+       MOVE DKKBELØB TO DKKBELØBVISNING
        STRING DATO DELIMITED BY SPACE
            " |  " DELIMITED BY SIZE
-           KLOKKESLÃ†T DELIMITED BY SPACE
+           KLOKKESLÆT DELIMITED BY SPACE
            " | " DELIMITED BY SIZE
            TRANSAKTIONSTYPE DELIMITED BY SIZE
            "  | " DELIMITED BY SIZE
-           DKKBELÃ˜BVISNING DELIMITED BY SIZE
+           DKKBELØBVISNING DELIMITED BY SIZE
            " | " DELIMITED BY SIZE
-           VALUTABELÃ˜BVISNING DELIMITED BY SIZE
+           VALUTABELØBVISNING DELIMITED BY SIZE
            " |     " DELIMITED BY SIZE
            VALUTA DELIMITED BY SIZE
            "    | " DELIMITED BY SIZE
@@ -194,14 +194,14 @@
        PERFORM UDSKRIV-OUTPUT.
 
        KONVERTER-TIL-DKK.
-       MOVE BELÃ˜B TO VALUTABELÃ˜B
+       MOVE BELØB TO VALUTABELØB
        EVALUATE VALUTA
            WHEN 'DKK'
-               MOVE BELÃ˜B TO DKKBELÃ˜B
+               MOVE BELØB TO DKKBELØB
            WHEN 'USD'
-               MULTIPLY VALUTABELÃ˜B BY USDTILDKK GIVING DKKBELÃ˜B
+               MULTIPLY VALUTABELØB BY USDTILDKK GIVING DKKBELØB
            WHEN 'EUR'
-               MULTIPLY VALUTABELÃ˜B BY EURTILDKK GIVING DKKBELÃ˜B
+               MULTIPLY VALUTABELØB BY EURTILDKK GIVING DKKBELØB
        END-EVALUATE.
 
        UDSKRIV-FOOTER.
