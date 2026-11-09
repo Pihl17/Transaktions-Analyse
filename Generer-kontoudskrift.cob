@@ -42,8 +42,8 @@
        01 KLOKKESLÆT           PIC X(8)        VALUE SPACES.
        01 VALUTABELØB          PIC S9(12)V9(2).
        01 DKKBELØB             PIC S9(12)V9(2).
-       01 DKKBELØBVISNING      PIC -ZZ,ZZZ,ZZZ,ZZ9.99.
-       01 VALUTABELØBVISNING   PIC -ZZ,ZZZ,ZZZ,ZZ9.99.
+       01 DKKBELØBVISNING      PIC ---,---,---,--9.99.
+       01 VALUTABELØBVISNING   PIC ---,---,---,--9.99.
 
 
        PROCEDURE DIVISION.
