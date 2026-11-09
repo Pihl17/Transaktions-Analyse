@@ -40,8 +40,10 @@
 
        01 DATO                 PIC X(10)       VALUE SPACES.
        01 KLOKKESLÆT           PIC X(8)        VALUE SPACES.
-       01 VALUTABELØB          PIC 9(12)V9(2).
-       01 DKKBELØB             PIC 9(12).9(2).
+       01 VALUTABELØB          PIC S9(12)V9(2).
+       01 DKKBELØB             PIC S9(12)V9(2).
+       01 DKKBELØBVISNING      PIC -ZZ,ZZZ,ZZZ,ZZ9.99.
+       01 VALUTABELØBVISNING   PIC -ZZ,ZZZ,ZZZ,ZZ9.99.
 
 
        PROCEDURE DIVISION.
@@ -135,7 +137,7 @@
        PERFORM UDSKRIV-OUTPUT
        PERFORM UDSKRIV-OUTPUT
        STRING "   Dato    | Tidspunkt | Transaktionstype |"
-             "   Beløb (DKK)   | Beløb (Valuta)  |" 
+             "     Beløb (DKK)    |   Beløb (Valuta)   |" 
              " Valutakode |    Butik"
              INTO OUTPUT-LINJE
        PERFORM UDSKRIV-OUTPUT.
@@ -173,15 +175,17 @@
        MOVE TIDSPUNKT(1:10) TO DATO
        MOVE TIDSPUNKT(12:8) TO KLOKKESLÆT
        PERFORM KONVERTER-TIL-DKK
+       MOVE BELØB TO VALUTABELØBVISNING
+       MOVE DKKBELØB TO DKKBELØBVISNING
        STRING DATO DELIMITED BY SPACE
            " |  " DELIMITED BY SIZE
            KLOKKESLÆT DELIMITED BY SPACE
            " | " DELIMITED BY SIZE
            TRANSAKTIONSTYPE DELIMITED BY SIZE
            "  | " DELIMITED BY SIZE
-           DKKBELØB DELIMITED BY SIZE
+           DKKBELØBVISNING DELIMITED BY SIZE
            " | " DELIMITED BY SIZE
-           BELØB DELIMITED BY SIZE
+           VALUTABELØBVISNING DELIMITED BY SIZE
            " |     " DELIMITED BY SIZE
            VALUTA DELIMITED BY SIZE
            "    | " DELIMITED BY SIZE
