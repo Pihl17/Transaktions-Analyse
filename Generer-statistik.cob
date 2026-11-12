@@ -98,8 +98,8 @@
        PERFORM VARYING IX FROM 1 BY 1 UNTIL IX > KUNDER-TOPSALDO-COUNT
            MOVE SALDO OF KUNDER-TOPSALDO(IX) TO SALDOVISNING
            STRING IX ". "
-                  NAVN OF KUNDER-TOPSALDO(IX) ", "
-                  SALDOVISNING " DKK"
+                  "Navn: " NAVN OF KUNDER-TOPSALDO(IX) ", "
+                  "Saldo: " SALDOVISNING " DKK"
                   INTO UHÅNDTERET-TEKST
            CALL "FJERN-OVERSKYENDE-MELLEMRUM" USING
                REFERENCE OUTPUT-LINJE
