@@ -1,5 +1,6 @@
-# Builds and executable files
+# Builds, executables and subroutine (library) files
 *.exe
+*.dll
 
 # Input data filer genereret af python scriptet
 [Bb]anker.txt
