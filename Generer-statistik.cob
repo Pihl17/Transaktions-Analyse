@@ -29,7 +29,7 @@
        01 KUNDER-TOPSALDO OCCURS KUNDER-TOPSALDO-COUNT TIMES.
            02 SALDO            PIC S9(12)V9(2).
            02 NAVN             PIC X(30).
-       01 CURRENT-KUNDE        .
+       01 CURRENT-KUNDE.
            02 SALDO            PIC S9(12)V9(2).
            02 NAVN             PIC X(30).
            02 CPR              PIC X(15).
