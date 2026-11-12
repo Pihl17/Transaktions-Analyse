@@ -28,7 +28,9 @@
        IGNORE-SPACE-BEFORE-SPECIALCHARACTERS.
        IF PREVIOUSCHAR = SPACE AND (
                INPUT-LINJE(IX-READ:1) = ',' OR
-               INPUT-LINJE(IX-READ:1) = '.'
+               INPUT-LINJE(IX-READ:1) = '.' OR
+               INPUT-LINJE(IX-READ:1) = ':' OR
+               INPUT-LINJE(IX-READ:1) = ';' 
            )
            SUBTRACT 1 FROM IX-OUT
        END-IF.
