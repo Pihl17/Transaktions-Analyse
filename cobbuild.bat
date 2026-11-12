@@ -10,9 +10,10 @@ set PATH=C:\GnuCobol\bin;%PATH%
 
 REM Byg subroutiner
 cobc -m "Konverter-til-dkk.cob"
+cobc -m "Fjern-overskyende-mellemrum.cob"
 
 REM Preload subroutiner
-set COB_PRE_LOAD=KONVERTER-TIL-DKK
+set COB_PRE_LOAD=KONVERTER-TIL-DKK;FJERN-OVERSKYENDE-MELLEMRUM
 
 REM Kald cobc med de rigtige flags 
 cobc -I"%COBINC%" -L"%COBLIB%" %* 
