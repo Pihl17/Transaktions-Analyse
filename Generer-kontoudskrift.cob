@@ -48,7 +48,10 @@
 
        PROCEDURE DIVISION.
        MOVE SPACES TO OUTPUT-LINJE
+       DISPLAY "Opsaetter bank infomation for all banker..."
        PERFORM UDFYLD-BANKER
+       DISPLAY 
+         "Gennemgaar alle transaktioner og udskriver kontoudskrifter..."
        OPEN OUTPUT KONTOUDSKRIFTFIL
        OPEN INPUT TRANSAKTIONSFIL
        PERFORM UNTIL END-OF-TRANSAKTIONER = "Y"
@@ -114,7 +117,6 @@
 
 
        OPSÆT-NÆSTE-KUNDE.
-       DISPLAY "Generer kontoudskrift for " NAVN OF TRANSAKTION-RECORD
        MOVE KONTO-ID TO CURRENT-KONTO
        PERFORM FINDBANK.
 

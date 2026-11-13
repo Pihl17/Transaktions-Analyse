@@ -65,6 +65,7 @@
        PROCEDURE DIVISION.
        MOVE SPACES TO OUTPUT-LINJE
        OPEN INPUT TRANSAKTIONSFIL
+       DISPLAY "Gennemgaar alle transaktioner og analyser værdierne..."
        PERFORM UNTIL END-OF-FILE = "Y"
            READ TRANSAKTIONSFIL INTO TRANSAKTION-RECORD
            AT END
@@ -80,16 +81,25 @@
                PERFORM TILFØJ-TRANSAKTIONSBELØB
                PERFORM TILFØJ-BUTIKSDETALJER
        END-PERFORM
+       DISPLAY "Alle transaktioner gennemgaaet!"
+           " Lukker for transaktionsfilen."
        CLOSE TRANSAKTIONSFIL
 
+       DISPLAY "Udregner top " BUTIKKER-TOPOMSAETNING-COUNT
+           " butikker med hoejeste omsaetning..."
        PERFORM UDREGN-BUTIK-MED-TOPOMSAETNING
+       DISPLAY "Top butikker fundet!"
 
+       DISPLAY "Udskriver statistiker til output fil..."
        OPEN OUTPUT STATISTIKFIL
        PERFORM UDSKRIV-TOPSALDO-KUNDER
        PERFORM UDSKRIV-MÅNEDS-OVERFØRELSER
        PERFORM UDSKRIV-BUTIK-TRANSAKTIONER
        PERFORM UDSKRIV-BUTIKKER-MED-TOPOMSAETNING
        CLOSE STATISTIKFIL
+       DISPLAY " "
+       DISPLAY "Udskrivne af statistikerne er gjort og kan findes i "
+           "Output/Statistik.txt"
 
        STOP RUN.
        
