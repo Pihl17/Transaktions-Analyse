@@ -48,10 +48,7 @@
        01 MÅNEDER OCCURS MÅNEDER-COUNT TIMES.
            02 INDBETALING      PIC S9(12)V9(2) VALUE 0.
            02 UDBETALING       PIC S9(12)V9(2) VALUE 0.
-       01 MANED-NAVNE VALUE        "Januar   Februar  Marts    April    
-      -          "Maj      Juni     Juli     August   SeptemberOktober  
-      -    "November December ".
-           02 MÅNED-NAVN   PIC X(9) OCCURS MÅNEDER-COUNT TIMES.
+       COPY "DataStruktur/MAANEDSNAVNE.cpy".
        
        01 BUTIKKER OCCURS BUTIKKER-COUNT TIMES.
            COPY "DataStruktur/BUTIKTRANSAKTIONER.cpy".
