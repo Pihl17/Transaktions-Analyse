@@ -27,7 +27,7 @@
        01 END-OF-FILE      PIC X       VALUE "N".
        01 IX               PIC 99.
        
-       01 SALDOVISNING         PIC ---,---,---,--9.99.
+       01 SALDOVISNING         PIC ---,---,---,--9.99  OCCURS 2 TIMES.
        01 UHÅNDTERET-TEKST     PIC X(90)   VALUE SPACES.
 
        01 KUNDER-TOPSALDO OCCURS KUNDER-TOPSALDO-COUNT TIMES.
@@ -116,10 +116,10 @@
            INTO OUTPUT-LINJE
        PERFORM UDSKRIV-OUTPUT
        PERFORM VARYING IX FROM 1 BY 1 UNTIL IX > KUNDER-TOPSALDO-COUNT
-           MOVE SALDO OF KUNDER-TOPSALDO(IX) TO SALDOVISNING
+           MOVE SALDO OF KUNDER-TOPSALDO(IX) TO SALDOVISNING(1)
            STRING IX ". "
                   "Navn: " NAVN OF KUNDER-TOPSALDO(IX) ", "
-                  "Saldo: " SALDOVISNING " DKK"
+                  "Saldo: " SALDOVISNING(1) " DKK"
                   INTO UHÅNDTERET-TEKST
            CALL "FJERN-OVERSKYENDE-MELLEMRUM" USING
                REFERENCE OUTPUT-LINJE
@@ -131,15 +131,20 @@
        PERFORM UDSKRIV-OUTPUT
        MOVE "Ind- og udbetalinger for hver måned: " TO OUTPUT-LINJE
        PERFORM UDSKRIV-OUTPUT
-       MOVE "Måned     Indbetalinger (DKK)  Udbetalinger (DKK)" 
+       MOVE "Måned     | Indbetalinger (DKK) | Udbetalinger (DKK)" 
+           TO OUTPUT-LINJE
+       PERFORM UDSKRIV-OUTPUT
+       MOVE "----------|---------------------|-------------------"
            TO OUTPUT-LINJE
        PERFORM UDSKRIV-OUTPUT
        PERFORM VARYING IX FROM 1 BY 1 UNTIL IX > MÅNEDER-COUNT
+           MOVE INDBETALING OF MÅNEDER(IX) TO SALDOVISNING(1)
+           MOVE UDBETALING OF MÅNEDER(IX) TO SALDOVISNING(2)
            STRING MÅNED-NAVN(IX)
-               "   "
-               INDBETALING OF MÅNEDER(IX)
-               "       "
-               UDBETALING OF MÅNEDER(IX)
+               " | " SPACE
+               SALDOVISNING(1)
+               " | "
+               SALDOVISNING(2)
                INTO OUTPUT-LINJE
            PERFORM UDSKRIV-OUTPUT
        END-PERFORM.
