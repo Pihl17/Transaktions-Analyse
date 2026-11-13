@@ -37,8 +37,6 @@
         COPY "DataStruktur/BANKER.cpy".
        01 BANK-INDEX           PIC 9(3)        VALUE 1.
 
-       01 DATO                 PIC X(10)       VALUE SPACES.
-       01 KLOKKESLÆT           PIC X(8)        VALUE SPACES.
        01 VALUTABELØB          PIC S9(12)V9(2) VALUE ZEROES.
        01 DKKBELØB             PIC S9(12)V9(2) VALUE ZEROES.
        01 DKKBELØBVISNING      PIC ---,---,---,--9.99.
@@ -178,13 +176,11 @@
 
 
        UDSKRIV-TRANSAKTION.
-       MOVE TIDSPUNKT(1:10) TO DATO
-       MOVE TIDSPUNKT(12:8) TO KLOKKESLÆT
        MOVE BELØB TO VALUTABELØBVISNING
        MOVE DKKBELØB TO DKKBELØBVISNING
        STRING DATO DELIMITED BY SPACE
            " |  " DELIMITED BY SIZE
-           KLOKKESLÆT DELIMITED BY SPACE
+           KLOKKESLÆT(1:8) DELIMITED BY SPACE
            " | " DELIMITED BY SIZE
            TRANSAKTIONSTYPE DELIMITED BY SIZE
            "  | " DELIMITED BY SIZE

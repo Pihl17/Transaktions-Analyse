@@ -13,4 +13,12 @@
        02 TRANSAKTIONSTYPE PIC X(15).
        02 FILLER           PIC X(5).
        02 BUTIK            PIC X(20).
-       02 TIDSPUNKT        PIC X(26).
+       02 TIDSPUNKT.
+           03 DATO.
+               04 ÅR       PIC 9(4).
+               04 FILLER   PIC X.
+               04 MÅNED    PIC 99.
+               04 FILLER   PIC X.
+               04 DAG      PIC 99.
+           03 FILLER       PIC X.
+           03 KLOKKESLÆT   PIC X(15).
