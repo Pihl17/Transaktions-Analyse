@@ -23,8 +23,12 @@
        WORKING-STORAGE SECTION.
        78 KUNDER-TOPSALDO-COUNT        VALUE 3.
        78 STARTSALDO                   VALUE 50000.
+
        01 END-OF-FILE      PIC X       VALUE "N".
        01 IX               PIC 99.
+       
+       01 SALDOVISNING         PIC ---,---,---,--9.99.
+       01 UHÅNDTERET-TEKST     PIC X(90)   VALUE SPACES.
 
        01 KUNDER-TOPSALDO OCCURS KUNDER-TOPSALDO-COUNT TIMES.
            02 SALDO            PIC S9(12)V9(2).
@@ -37,8 +41,15 @@
            02 SALDO            PIC S9(12)V9(2).
            02 NAVN             PIC X(30).
        01 TRANSAKTIONSBELØB    PIC S9(12)V9(2).
-       01 SALDOVISNING         PIC ---,---,---,--9.99.
-       01 UHÅNDTERET-TEKST     PIC X(90)   VALUE SPACES.
+
+       01 MÅNEDER-COUNT        CONSTANT AS 12.
+       01 MÅNEDER OCCURS MÅNEDER-COUNT TIMES.
+           02 INDBETALING      PIC S9(12)V9(2) VALUE 0.
+           02 UDBETALING       PIC S9(12)V9(2) VALUE 0.
+       01 MANED-NAVNE VALUE        "Januar   Februar  Marts    April    
+      -          "Maj      Juni     Juli     August   SeptemberOktober  
+      -    "November December ".
+           02 MÅNED-NAVN   PIC X(9) OCCURS MÅNEDER-COUNT TIMES.
 
 
        PROCEDURE DIVISION.
@@ -60,7 +71,10 @@
        END-PERFORM
        CLOSE TRANSAKTIONSFIL
 
+       OPEN OUTPUT STATISTIKFIL
        PERFORM UDSKRIV-TOPSALDO-KUNDER
+       PERFORM UDSKRIV-MÅNEDS-OVERFØRELSER
+       CLOSE STATISTIKFIL
 
        STOP RUN.
        
@@ -90,7 +104,6 @@
        END-PERFORM.
 
        UDSKRIV-TOPSALDO-KUNDER.
-       OPEN OUTPUT STATISTIKFIL
        PERFORM UDSKRIV-OUTPUT
        STRING "Top " KUNDER-TOPSALDO-COUNT " kunder med højeste saldo:"
            INTO OUTPUT-LINJE
@@ -105,6 +118,21 @@
                REFERENCE OUTPUT-LINJE
                CONTENT UHÅNDTERET-TEKST
            PERFORM UDSKRIV-OUTPUT
-       END-PERFORM
-       CLOSE STATISTIKFIL.
+       END-PERFORM.
        
+       UDSKRIV-MÅNEDS-OVERFØRELSER.
+       PERFORM UDSKRIV-OUTPUT
+       MOVE "Ind- og udbetalinger for hver måned: " TO OUTPUT-LINJE
+       PERFORM UDSKRIV-OUTPUT
+       MOVE "Måned     Indbetalinger (DKK)  Udbetalinger (DKK)" 
+           TO OUTPUT-LINJE
+       PERFORM UDSKRIV-OUTPUT
+       PERFORM VARYING IX FROM 1 BY 1 UNTIL IX > MÅNEDER-COUNT
+           STRING MÅNED-NAVN(IX)
+               "   "
+               INDBETALING OF MÅNEDER(IX)
+               "       "
+               UDBETALING OF MÅNEDER(IX)
+               INTO OUTPUT-LINJE
+           PERFORM UDSKRIV-OUTPUT
+       END-PERFORM.
