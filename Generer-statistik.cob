@@ -23,9 +23,11 @@
        WORKING-STORAGE SECTION.
        78 KUNDER-TOPSALDO-COUNT        VALUE 3.
        78 STARTSALDO                   VALUE 50000.
+       78 BUTIKKER-COUNT               VALUE 13.
 
        01 END-OF-FILE      PIC X       VALUE "N".
        01 IX               PIC 99.
+       01 BREAK-PERFORM    PIC X       VALUE "N".
        
        01 SALDOVISNING         PIC ---,---,---,--9.99  OCCURS 2 TIMES.
        01 UHÅNDTERET-TEKST     PIC X(90)   VALUE SPACES.
@@ -50,6 +52,10 @@
       -          "Maj      Juni     Juli     August   SeptemberOktober  
       -    "November December ".
            02 MÅNED-NAVN   PIC X(9) OCCURS MÅNEDER-COUNT TIMES.
+       
+       01 BUTIKKER OCCURS BUTIKKER-COUNT TIMES.
+           COPY "DataStruktur/BUTIKTRANSAKTIONER.cpy".
+       01 ANTALSVISNING        PIC Z(4)9.
 
 
        PROCEDURE DIVISION.
@@ -68,12 +74,14 @@
                    PERFORM SET-NY-KUNDE
                END-IF
                PERFORM TILFØJ-TRANSAKTIONSBELØB
+               PERFORM TILFØJ-BUTIKSDETALJER
        END-PERFORM
        CLOSE TRANSAKTIONSFIL
 
        OPEN OUTPUT STATISTIKFIL
        PERFORM UDSKRIV-TOPSALDO-KUNDER
        PERFORM UDSKRIV-MÅNEDS-OVERFØRELSER
+       PERFORM UDSKRIV-BUTIK-TRANSAKTIONER
        CLOSE STATISTIKFIL
 
        STOP RUN.
@@ -147,4 +155,44 @@
                SALDOVISNING(2)
                INTO OUTPUT-LINJE
            PERFORM UDSKRIV-OUTPUT
+       END-PERFORM.
+
+       TILFØJ-BUTIKSDETALJER.
+       MOVE "N" TO BREAK-PERFORM
+       PERFORM VARYING IX FROM 1 BY 1 UNTIL IX > BUTIKKER-COUNT
+               OR BREAK-PERFORM = "Y"
+           EVALUATE NAVN OF BUTIKKER(IX)
+               WHEN SPACES
+                   MOVE BUTIK TO NAVN OF BUTIKKER(IX)
+                   ADD 1 TO ANTALTRANSAKTIONER OF BUTIKKER(IX)
+                   MOVE "Y" TO BREAK-PERFORM
+               WHEN BUTIK
+                   ADD 1 TO ANTALTRANSAKTIONER OF BUTIKKER(IX)
+                   MOVE "Y" TO BREAK-PERFORM
+           END-EVALUATE
+       END-PERFORM.
+
+       UDSKRIV-BUTIK-TRANSAKTIONER.
+       PERFORM UDSKRIV-OUTPUT
+       MOVE "Antal transaktioner per butik:" TO OUTPUT-LINJE
+       PERFORM UDSKRIV-OUTPUT
+       MOVE "                     |     Antal    " TO OUTPUT-LINJE
+       PERFORM UDSKRIV-OUTPUT
+       MOVE "        Butik        | transaktioner" TO OUTPUT-LINJE
+       PERFORM UDSKRIV-OUTPUT
+       MOVE "---------------------|--------------" TO OUTPUT-LINJE
+       PERFORM UDSKRIV-OUTPUT
+       MOVE "N" TO BREAK-PERFORM
+       PERFORM VARYING IX FROM 1 BY 1 UNTIL IX > BUTIKKER-COUNT
+               OR BREAK-PERFORM = "Y"
+           IF NAVN OF BUTIKKER(IX) = SPACES
+               MOVE "Y" TO BREAK-PERFORM
+           ELSE
+               MOVE ANTALTRANSAKTIONER OF BUTIKKER(IX) TO ANTALSVISNING
+               STRING NAVN OF BUTIKKER(IX)
+                   " |     "
+                   ANTALSVISNING
+                   INTO OUTPUT-LINJE
+               PERFORM UDSKRIV-OUTPUT
+           END-IF
        END-PERFORM.
