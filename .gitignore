@@ -2,6 +2,9 @@
 *.exe
 *.dll
 
+# Build mapper
+[Bb]in/
+
 # Input data filer genereret af python scriptet
 [Bb]anker.txt
 [Tt]ransaktioner.txt
