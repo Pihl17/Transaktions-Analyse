@@ -4,7 +4,7 @@
        ENVIRONMENT DIVISION.
        INPUT-OUTPUT SECTION.
        FILE-CONTROL.
-           SELECT TRANSAKTIONSFIL ASSIGN TO "Transaktioner.txt"
+           SELECT TRANSAKTIONSFIL ASSIGN TO "Sorteret-transaktioner.txt"
                ORGANIZATION IS LINE SEQUENTIAL.
            SELECT BANKERFIL ASSIGN TO "Banker.txt"
                ORGANIZATION IS LINE SEQUENTIAL.
@@ -47,6 +47,7 @@
 
 
        PROCEDURE DIVISION.
+       CALL 'SORTER-TRANSAKTIONER'
        MOVE SPACES TO OUTPUT-LINJE
        DISPLAY "Opsaetter bank infomation for all banker..."
        PERFORM UDFYLD-BANKER

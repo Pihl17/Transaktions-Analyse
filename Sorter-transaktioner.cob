@@ -1,0 +1,31 @@
+       IDENTIFICATION DIVISION.
+       PROGRAM-ID. SORTER-TRANSAKTIONER.
+       
+       ENVIRONMENT DIVISION.
+       INPUT-OUTPUT SECTION.
+       FILE-CONTROL.
+           SELECT INPUTFIL ASSIGN TO "Transaktioner.txt"
+               ORGANIZATION IS LINE SEQUENTIAL.
+           SELECT OUTPUTFIL ASSIGN TO "Sorteret-transaktioner.txt"
+               ORGANIZATION IS LINE SEQUENTIAL.
+           SELECT WORKFIL ASSIGN TO "Temp-transaktioner"
+               ORGANIZATION IS LINE SEQUENTIAL.
+       
+       DATA DIVISION.
+       FILE SECTION.
+       FD INPUTFIL.
+           01 INPUT-RECORD.
+           COPY "DataStruktur/TRANSAKTIONER.cpy".
+       FD OUTPUTFIL.
+           01 OUTPUT-RECORD.
+           COPY "DataStruktur/TRANSAKTIONER.cpy".
+       SD WORKFIL.
+           01 WORK-RECORD.
+           COPY "DataStruktur/TRANSAKTIONER.cpy".
+       
+       PROCEDURE DIVISION.
+       SORT WORKFIL 
+           ON ASCENDING KEY CPR OF WORK-RECORD
+           ON ASCENDING KEY TRANSAKTIONSTYPE OF WORK-RECORD
+           USING INPUTFIL GIVING OUTPUTFIL.
+       EXIT PROGRAM.
