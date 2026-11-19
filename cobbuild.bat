@@ -1,10 +1,13 @@
 @echo off 
 SETLOCAL
-REM Tjekker om en cobol fil er angivet som input
-if [%1]==[] goto :wrongfile
-if [%~x1]==[] goto :wrongfile
-if not %~x1==.cob goto :wrongfile
-dir %1 /b >nul 2>nul || goto :wrongfile
+REM Tjekker om alle input variabler er cobol filer
+for %%f in (%*) do (
+    set var=%%f
+    if [%%f]==[] goto :wrongfile
+    if [%%~xf]==[] goto :wrongfile
+    if not %%~xf==.cob goto :wrongfile
+    dir %%f /b >nul 2>nul || goto :wrongfile
+)
 
 REM Wrapper til GnuCOBOL på Windows 
 REM Sætter include- og lib-stier automatisk 
@@ -42,4 +45,4 @@ goto :eof
 
 REM Giver fejl-besked og stopper scriptet
 :wrongfile
-echo Error: Input argument doesn't match a cobol file
+echo Error for input %var%: Input argument doesn't match a cobol file
