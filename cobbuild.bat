@@ -29,7 +29,7 @@ for /f "tokens=1,2 delims=," %%a in (project\Subroutines.txt) do (
 )
 
 REM Kald cobc med de rigtige flags 
-cobc -I"%COBINC%" -L"%COBLIB%" -x %1 -o "bin\Build.exe"
+cobc -I"%COBINC%" -L"%COBLIB%" -x %1 -o "bin\%~n1.exe"
 ENDLOCAL
 goto :eof
 
