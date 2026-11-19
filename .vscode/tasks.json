@@ -8,7 +8,7 @@
             "command": "cmd",
             "args": [
                 "/c",
-                "cobbuild.bat -x \"${file}\" -o \"${fileDirname}\\Build.exe\" && \"${fileDirname}\\Build.exe\""
+                "cobbuild.bat \"${file}\" && \"${fileDirname}\\cobrun.bat\""
             ],
             "options": {
                 "cwd": "${fileDirname}"
