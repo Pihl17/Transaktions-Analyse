@@ -50,7 +50,11 @@
        01 MÅNEDER OCCURS MÅNEDER-COUNT TIMES.
            02 INDBETALING      PIC S9(12)V9(2) VALUE 0.
            02 UDBETALING       PIC S9(12)V9(2) VALUE 0.
+           02 ANTAL-INDBETALINGER  PIC 9(5) VALUE 0.
+           02 ANTAL-UDBETALINGER   PIC 9(5) VALUE 0.
+           02 ANTAL-OVERFØRELSER   PIC 9(5) VALUE 0.
        COPY "DataStruktur/MAANEDSNAVNE.cpy".
+       01 MÅNEDS-TOPTRANSAKTIONSTYPE   PIC X(15) VALUE SPACES.
        
        01 BUTIKKER OCCURS BUTIKKER-COUNT TIMES.
            COPY "DataStruktur/BUTIKTRANSAKTIONER.cpy".
@@ -80,6 +84,7 @@
                END-IF
                PERFORM TILFØJ-TRANSAKTIONSBELØB
                PERFORM TILFØJ-BUTIKSDETALJER
+               PERFORM OPTÆL-TRANSAKTIONSTYPER
        END-PERFORM
        DISPLAY "Alle transaktioner gennemgaaet!"
            " Lukker for transaktionsfilen."
@@ -151,25 +156,60 @@
                CONTENT UHÅNDTERET-TEKST
            PERFORM UDSKRIV-OUTPUT
        END-PERFORM.
+
+       OPTÆL-TRANSAKTIONSTYPER.
+       EVALUATE TRANSAKTIONSTYPE OF TRANSAKTION-RECORD
+           WHEN "Indbetaling"
+               ADD 1 TO ANTAL-INDBETALINGER 
+                   OF MÅNEDER(MÅNED OF TRANSAKTION-RECORD)
+           WHEN "Udbetaling"
+               ADD 1 TO ANTAL-UDBETALINGER 
+                   OF MÅNEDER(MÅNED OF TRANSAKTION-RECORD)
+           WHEN "Overførsel"
+               ADD 1 TO ANTAL-OVERFØRELSER 
+                   OF MÅNEDER(MÅNED OF TRANSAKTION-RECORD)
+       END-EVALUATE.
+       
+       FIND-TOPTRANSAKTIONSTYPE-FORMÅNED.
+       IF ANTAL-INDBETALINGER OF MÅNEDER(IX) 
+               > ANTAL-UDBETALINGER OF MÅNEDER(IX) 
+               AND ANTAL-INDBETALINGER OF MÅNEDER(IX) 
+               > ANTAL-OVERFØRELSER OF MÅNEDER(IX)
+           MOVE "Indbetaling" TO MÅNEDS-TOPTRANSAKTIONSTYPE
+       ELSE IF ANTAL-UDBETALINGER OF MÅNEDER(IX) 
+               > ANTAL-OVERFØRELSER OF MÅNEDER(IX)
+           MOVE "Udbetaling" TO MÅNEDS-TOPTRANSAKTIONSTYPE
+       ELSE
+           MOVE "Overførsel" TO MÅNEDS-TOPTRANSAKTIONSTYPE
+       END-IF.
        
        UDSKRIV-MÅNEDS-OVERFØRELSER.
        PERFORM UDSKRIV-OUTPUT
        MOVE "Ind- og udbetalinger for hver måned: " TO OUTPUT-LINJE
        PERFORM UDSKRIV-OUTPUT
-       MOVE "Måned     | Indbetalinger (DKK) | Udbetalinger (DKK)" 
-           TO OUTPUT-LINJE
+       STRING "          |                     |                    |"
+              " Mest anvendte"              
+           INTO OUTPUT-LINJE
        PERFORM UDSKRIV-OUTPUT
-       MOVE "----------|---------------------|-------------------"
-           TO OUTPUT-LINJE
+       STRING "Måned     | Indbetalinger (DKK) | Udbetalinger (DKK) |"
+              " transaktionstype"              
+           INTO OUTPUT-LINJE
+       PERFORM UDSKRIV-OUTPUT
+       STRING "----------|---------------------|--------------------|"
+              "-----------------"
+           INTO OUTPUT-LINJE
        PERFORM UDSKRIV-OUTPUT
        PERFORM VARYING IX FROM 1 BY 1 UNTIL IX > MÅNEDER-COUNT
            MOVE INDBETALING OF MÅNEDER(IX) TO SALDOVISNING(1)
            MOVE UDBETALING OF MÅNEDER(IX) TO SALDOVISNING(2)
+           PERFORM FIND-TOPTRANSAKTIONSTYPE-FORMÅNED
            STRING MÅNED-NAVN(IX)
                " | " SPACE
                SALDOVISNING(1)
                " | "
                SALDOVISNING(2)
+               " | "
+               MÅNEDS-TOPTRANSAKTIONSTYPE
                INTO OUTPUT-LINJE
            PERFORM UDSKRIV-OUTPUT
        END-PERFORM.
