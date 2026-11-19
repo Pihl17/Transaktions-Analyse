@@ -29,9 +29,10 @@ python GenInputData.py
 Programmerne kan bygges gennem comand promt terminalen.
 Naviger til mappen og kør følgende komando:
 ```
-cobbuild.bat <fil-navn>.cob
+cobbuild.bat <fil-navn>.cob [<fil-navn>.cob ...]
 ```
-Derefter kan programmet køres gennem terminalen ved at kalde:
+Flere cobol filer kan angives, hvor de alle bliver bygget, en efter en. \
+Derefter kan programmerne køres gennem terminalen ved at kalde:
 ```
 cobrun.bat <fil-navn>
 ```
