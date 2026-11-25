@@ -24,7 +24,7 @@ if not exist bin (
 
 REM Byg og preload subroutiner
 for /f "tokens=1,2 delims=," %%a in (project\Subroutines.txt) do (
-    if [%%b]==[] (cobc -m "%%a.cob" -o "./bin/%%a.dll") else (cobc -m "%%b/%%a.cob" -o "./bin/%%a.dll") || Exit 1
+    if [%%b]==[] (cobc -m "%%a.cob" -o "./bin/%%a.dll" || Exit 1) else (cobc -m "%%b/%%a.cob" -o "./bin/%%a.dll" || Exit 1)
     REM preloading af subroutinerne skal gøres udenfor for loopet
     REM ellers vil miljøvariablet ikke blive ændret ordenligt
     set var=%%a
