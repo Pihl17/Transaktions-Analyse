@@ -4,6 +4,10 @@ Baseret på opgave fra Specialisterne.
 
 Python scriptet `GenInputData.py` generer en liste af fiktive banke og fiktive transaktioner som så bliver analyseret af et cobol program.
 
+`Generer-kontoudskrift.cob` tager transaktionerne og udskriver kontoudskrifter for hver af kunderne baseret på deres transaktioner.
+
+`Generer-statistik.cob` tager transaktionerne og udskriver forskellige statistiker på transaktionerne.
+
 # Getting Started
 
 ## Påkræver
@@ -20,16 +24,17 @@ Inde i mappen, kør python scripted:
 python GenInputData.py
 ```
 
-## Byg og kør programmet
+## Byg og kør programmerne
 
-Programmet kan bygges gennem comand promt terminalen.
+Programmerne kan bygges gennem comand promt terminalen.
 Naviger til mappen og kør følgende komando:
 ```
-cobbuild.bat -x Generer-kontoudskrift.cob -o Build.exe -lcob
+cobbuild.bat <fil-navn>.cob [<fil-navn>.cob ...]
 ```
-Derefter kan programmet køres gennem terminalen ved at kalde:
+Flere cobol filer kan angives, hvor de alle bliver bygget, en efter en. \
+Derefter kan programmerne køres gennem terminalen ved at kalde:
 ```
-Build.exe
+cobrun.bat <fil-navn>
 ```
 
 Programmet kan også bygges og køres gennem `Run Build Task` kommandoen inde i Visual Studio Code (genvejs-tasten er `Ctrl + Shift + B`).
