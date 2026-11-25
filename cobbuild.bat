@@ -16,7 +16,7 @@ if not exist bin (
 
 REM Byg og preload subroutiner
 for /f "tokens=* delims=" %%s in (project\Subroutines.txt) do (
-    cobc -m "%%s.cob" -o "./bin/%%s.dll"
+    cobc -m "%%s.cob" -o "./bin/%%s.dll" || Exit 1
     REM Preloading of subroutines has to be done outside of the for loop
     REM Otherwise the environment variable won't be properly updated
     set var=%%s
@@ -24,7 +24,7 @@ for /f "tokens=* delims=" %%s in (project\Subroutines.txt) do (
 )
 
 REM Kald cobc med de rigtige flags 
-cobc -I"%COBINC%" -L"%COBLIB%" %* 
+cobc -I"%COBINC%" -L"%COBLIB%" %* || Exit 1
 goto :eof
 
 REM Funktion for at preloade subroutines
